@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        .header{
+          position: fixed;
+          text-align: left;
+          top: 17px;
+          left: 17px;
+          font-size: 26px;
+          font-family: 'Open Sans', sans-serif;
+          font-weight: bold;
+          color: #000000;
+        }
+        .footer{
+          position: fixed;
+          text-align: center;
+          color: #7c0000;
+          bottom: 0px;
+          width: 100%;
+        }
+
+        #menu {
+          background: #fff;
+          position: absolute;
+          z-index: 1;
+          top: 10px;
+          right: 10px;
+          border-radius: 3px;
+          width: 110px;
+          border: 1px solid rgba(0, 0, 0, 0.4);
+          font-family: 'Open Sans', sans-serif;
+        }
+
+        #menu a {
+          font-size: 13px;
+          color: #404040;
+          display: block;
+          margin: 0;
+          padding: 0;
+          padding: 10px;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+          text-align: center;
+        }
+
+        #menu a:last-child {
+          border: none;
+        }
+
+        #menu a:hover {
+          background-color: #f8f8f8;
+          color: #3887be;
+        }
+
+        #menu a.active {
+          background-color: #3887be;
+          color: #ffffff;
+        }
+
+        #menu a.active:hover {
+          background: #3074a4;
+        }
+    </style>
+</head>
+<body>
+
+<nav id="menu"></nav>
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2x1Z2lzIiwiYSI6IlB5TlZENVUifQ.Z597Ia0qffZlYcGpbJtzTA';
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/outdoors-v10', // stylesheet location
+    center: [-120.571766, 35.336772], // starting position [lng, lat]
+    zoom: 7 // starting zoom
+});
+
+map.on('load', function() {
+
+  map.addLayer({
+    'id': 'Pre-1931',
+    'type': 'fill',
+    'source': {
+      type: 'vector',
+      url: 'mapbox://slugis.7am95cf7'
+    },
+    'source-layer': 'FireHistory_pre1931-1fi7p1',
+    'layout': {
+      'visibility': 'visible'
+    },
+    'paint': {
+      'fill-opacity': 0.5,
+      'fill-color': '#ffcd4f'
+    }
+  });
+
+  map.addLayer({
+    'id': '1931 - 1950',
+    'type': 'fill',
+    'source': {
+      type: 'vector',
+      url: 'mapbox://slugis.654fuhgv'
+    },
+    'source-layer': 'FireHistory_1931thru50-dlkb18',
+    'layout': {
+      'visibility': 'visible'
+    },
+    'paint': {
+      'fill-opacity': 0.5,
+      'fill-color': '#ffa921'
+    }
+  });
+
+  map.addLayer({
+    'id': '1951 - 1970',
+    'type': 'fill',
+    'source': {
+      type: 'vector',
+      url: 'mapbox://slugis.1ep5h0ot'
+    },
+    'source-layer': 'FireHistory_1951thru70-5uo5ts',
+    'layout': {
+      'visibility': 'visible'
+    },
+    'paint': {
+      'fill-opacity': 0.5,
+      'fill-color': '#ff7f00'
+    }
+  });
+
+  map.addLayer({
+    'id': '1971 - 1990',
+    'type': 'fill',
+    'source': {
+      type: 'vector',
+      url: 'mapbox://slugis.9nkl2r39'
+    },
+    'source-layer': 'FireHistory_1971thru90-2qoukt',
+    'layout': {
+      'visibility': 'visible'
+    },
+    'paint': {
+      'fill-opacity': 0.5,
+      'fill-color': '#f70000'
+    }
+  });
+
+  map.addLayer({
+    'id': '1991 - 2010',
+    'type': 'fill',
+    'source': {
+      type: 'vector',
+      url: 'mapbox://slugis.dduk231v'
+    },
+    'source-layer': 'FireHistory_1991thru2010-cnrv5a',
+    'layout': {
+      'visibility': 'visible'
+    },
+    'paint': {
+      'fill-opacity': 0.5,
+      'fill-color': '#b70000'
+    }
+  });
+
+  map.addLayer({
+    'id': 'Post-2010',
+    'type': 'fill',
+    'source': {
+      type: 'vector',
+      url: 'mapbox://slugis.3frtdkrm'
+    },
+    'source-layer': 'FireHistory_post2010-0gqptj',
+    'layout': {
+      'visibility': 'visible'
+    },
+    'paint': {
+      'fill-opacity': 0.5,
+      'fill-color': '#7c0000'
+    }
+  });
+
+  var popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false
+  });
+
+  var fireLayers = ['Pre-1931', '1931 - 1950', '1951 - 1970', '1971 - 1990', '1991 - 2010', 'Post-2010'];
+
+  for(i = 0; i < fireLayers.length; i++) {
+    map.on("mouseenter", fireLayers[i], function(e) {
+      map.getCanvas().style.cursor = "pointer";
+    });
+      map.on("mouseleave", fireLayers[i], function() {
+        map.getCanvas().style.cursor = "";
+      });
+    };
+
+
+  map.on("click", "Pre-1931", function (e) {
+    if (e.features[0].properties.AGENCY == 'USF') {
+      e.features[0].properties.AGENCY = 'USFS';
+    }
+    new mapboxgl.Popup()
+      .setLngLat(e.lngLat)
+      .setHTML(
+        '<b>Fire Name: </b>' + e.features[0].properties.FIRE_NAME +
+        '<br/><b>Year: </b>' + e.features[0].properties.YEAR_ +
+        '<br/><b>Unit: </b>' + e.features[0].properties.UNIT_ID +
+        '<br/><b>Agency: </b>' + e.features[0].properties.AGENCY +
+        '<br/><b>Area Burned: </b>' + e.features[0].properties.GIS_ACRES + ' Acres')
+      .addTo(map);
+  });
+
+  map.on("click", "1931 - 1950", function(e) {
+    if (e.features[0].properties.AGENCY == 'USF') {
+      e.features[0].properties.AGENCY = 'USFS';
+    }
+    new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML(
+      '<b>Fire Name: </b>' + e.features[0].properties.FIRE_NAME +
+      '<br/><b>Year: </b>' + e.features[0].properties.YEAR_ +
+      '<br/><b>Unit: </b>' + e.features[0].properties.UNIT_ID +
+      '<br/><b>Agency: </b>' + e.features[0].properties.AGENCY +
+      '<br/><b>Area Burned: </b>' + e.features[0].properties.GIS_ACRES + ' Acres')
+    .addTo(map);
+  });
+
+  map.on("click", "1951 - 1970", function(e) {
+    if (e.features[0].properties.AGENCY == 'USF') {
+      e.features[0].properties.AGENCY = 'USFS';
+    }
+    new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML(
+      '<b>Fire Name: </b>' + e.features[0].properties.FIRE_NAME +
+      '<br/><b>Year: </b>' + e.features[0].properties.YEAR_ +
+      '<br/><b>Unit: </b>' + e.features[0].properties.UNIT_ID +
+      '<br/><b>Agency: </b>' + e.features[0].properties.AGENCY +
+      '<br/><b>Area Burned: </b>' + e.features[0].properties.GIS_ACRES + ' Acres')
+    .addTo(map);
+  });
+
+  map.on("click", "1971 - 1990", function(e) {
+    if (e.features[0].properties.AGENCY == 'USF') {
+      e.features[0].properties.AGENCY = 'USFS';
+    }
+    new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML(
+      '<b>Fire Name: </b>' + e.features[0].properties.FIRE_NAME +
+      '<br/><b>Year: </b>' + e.features[0].properties.YEAR_ +
+      '<br/><b>Unit: </b>' + e.features[0].properties.UNIT_ID +
+      '<br/><b>Agency: </b>' + e.features[0].properties.AGENCY +
+      '<br/><b>Area Burned: </b>' + e.features[0].properties.GIS_ACRES + ' Acres')
+    .addTo(map);
+  });
+
+  map.on("click", "1991 - 2010", function(e) {
+    if (e.features[0].properties.AGENCY == 'USF') {
+      e.features[0].properties.AGENCY = 'USFS';
+    }
+    new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML(
+      '<b>Fire Name: </b>' + e.features[0].properties.FIRE_NAME +
+      '<br/><b>Year: </b>' + e.features[0].properties.YEAR_ +
+      '<br/><b>Unit: </b>' + e.features[0].properties.UNIT_ID +
+      '<br/><b>Agency: </b>' + e.features[0].properties.AGENCY +
+      '<br/><b>Area Burned: </b>' + e.features[0].properties.GIS_ACRES + ' Acres')
+    .addTo(map);
+  });
+
+  map.on("click", "Post-2010", function(e) {
+    if (e.features[0].properties.AGENCY == 'USF') {
+      e.features[0].properties.AGENCY = 'USFS';
+    }
+    new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML(
+      '<b>Fire Name: </b>' + e.features[0].properties.FIRE_NAME +
+      '<br/><b>Year: </b>' + e.features[0].properties.YEAR_ +
+      '<br/><b>Unit: </b>' + e.features[0].properties.UNIT_ID +
+      '<br/><b>Agency: </b>' + e.features[0].properties.AGENCY +
+      '<br/><b>Area Burned: </b>' + e.features[0].properties.GIS_ACRES + ' Acres')
+    .addTo(map);
+  });
+
+var toggleableLayerIds = ['Pre-1931', '1931 - 1950', '1951 - 1970', '1971 - 1990', '1991 - 2010', 'Post-2010'];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+  var id = toggleableLayerIds[i];
+
+  var link = document.createElement('a');
+  link.href = '#';
+  link.className = 'active';
+  link.textContent = id;
+
+  link.onclick = function (e) {
+    var clickedLayer = this.textContent;
+    e.preventDefault();
+    e.stopPropagation();
+
+    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+    if (visibility === 'visible') {
+      map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+      this.className = '';
+    } else {
+      this.className = 'active';
+      map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+    }
+  };
+
+  var layers = document.getElementById('menu');
+  layers.appendChild(link);
+}
+
+
+});
+
+</script>
+
+<div class="header">CA Fire History Map</div>
+<div class="footer">Data courtesy of FRAP : <a href="http://frap.fire.ca.gov/data/frapgisdata-sw-fireperimeters_download.php" target="_blank">source</a></div>
+</body>
+</html>
